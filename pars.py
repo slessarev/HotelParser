@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as BS
+import csv
 def fed_number(page):
     # функция принимает на вход номер страницы и возвращает список из 10 номеров поля Порядковый номер в Федеральном перечне.
 
@@ -47,5 +48,11 @@ def get_url_list(page):
     for item in link:
         item_url.append(item.get("href"))
     return item_url
+
+def csv_writer(ls_url):
+    with open('data.csv', 'a', newline='') as file:
+        writer = csv.writer(file, delimiter=";")
+        for item in ls_url:        
+            writer.writerow(get_data(item))
 
         
