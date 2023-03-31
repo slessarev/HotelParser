@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup as BS
 import csv
+import sendmail
 
 
 def fed_number(page):
@@ -67,5 +68,6 @@ def csv_writer(ls_url):
             else:
                 print("False")
                 writer.writerow(rec_element)
+                # sendmail.send_email("Появилась новая запись: \n" + str(rec_element))
             print(rec_element)
             

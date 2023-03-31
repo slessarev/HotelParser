@@ -10,6 +10,6 @@ while True:
     if breake_flag != ls_url:
         pars.csv_writer(ls_url)
         breake_flag=ls_url
-        i+=1get_data(item)
+        i+=1
     else:
         break
