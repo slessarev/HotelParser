@@ -68,6 +68,6 @@ def csv_writer(ls_url):
             else:
                 print("False")
                 writer.writerow(rec_element)
-                # sendmail.send_email("Появилась новая запись: \n" + str(rec_element))
+                sendmail.send_email("Появилась новая запись: \n" + str(rec_element))
             print(rec_element)
             
