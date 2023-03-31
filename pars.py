@@ -33,8 +33,10 @@ def fed_number(page):
 
 def get_data(link):
     # Функция возвращает значения ИНН, телефон, почта изкарточки организации
-    r = requests.get(
-        "https://xn----7sba3acabbldhv3chawrl5bzn.xn--p1ai" + str(link))
+    try: 
+        r = requests.get("https://xn----7sba3acabbldhv3chawrl5bzn.xn--p1ai" + str(link))
+    except Exception as ex:
+        return get_data(link)
     html = BS(r.content, 'lxml')
     inn = html.find("div").find_all("span")
     data_str = list()
@@ -48,7 +50,10 @@ def get_data(link):
 
 def get_url_list(page):
     # функция, которая возвращает ссылки на страницы отелей
-    r = requests.get("https://xn----7sba3acabbldhv3chawrl5bzn.xn--p1ai/displayAccommodation/index?Accommodation%5BFullName%5D=&Accommodation%5BRegion%5D=%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0+%D0%9A%D1%80%D1%8B%D0%BC&Accommodation%5BKey%5D=&Accommodation%5BOrganizationId%5D=&Accommodation%5BCertificateNumber%5D=&Accommodation%5BInn%5D=&Accommodation%5BOgrn%5D=&Accommodation%5BSolutionNumber%5D=&yt0=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8&Accommodation_page=" + str(page))
+    try: 
+        r = requests.get("https://xn----7sba3acabbldhv3chawrl5bzn.xn--p1ai/displayAccommodation/index?Accommodation%5BFullName%5D=&Accommodation%5BRegion%5D=%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0+%D0%9A%D1%80%D1%8B%D0%BC&Accommodation%5BKey%5D=&Accommodation%5BOrganizationId%5D=&Accommodation%5BCertificateNumber%5D=&Accommodation%5BInn%5D=&Accommodation%5BOgrn%5D=&Accommodation%5BSolutionNumber%5D=&yt0=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8&Accommodation_page=" + str(page))
+    except Exception as ex:
+        return get_url_list(page)
     html = BS(r.content, 'lxml')
     link = html.find_all("a", class_="object-title")
     # print(link)
@@ -64,10 +69,22 @@ def csv_writer(ls_url):
         for item in ls_url:
             rec_element = get_data(item)
             if rec_element[0] in open('data.csv', encoding="utf-8").read():
-                print("True")
+                print("Skip")
             else:
-                print("False")
+                print("Writed")
                 writer.writerow(rec_element)
                 sendmail.send_email("Появилась новая запись: \n" + str(rec_element))
             print(rec_element)
             
+def parser():
+    i=1
+    breake_flag = list()
+    while True:
+        
+        ls_url = get_url_list(i)
+        if breake_flag != ls_url:
+            csv_writer(ls_url)
+            breake_flag=ls_url
+            i+=1
+        else:
+            break
