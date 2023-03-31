@@ -9,8 +9,7 @@ while True:
     ls_url = pars.get_url_list(i)
     if breake_flag != ls_url:
         pars.csv_writer(ls_url)
-        i+=1
+        breake_flag=ls_url
+        i+=1get_data(item)
     else:
         break
-
-# Нужно прописать Encoding
